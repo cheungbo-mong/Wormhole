@@ -85,10 +85,14 @@
     }
 
     extension Session: WCSessionDelegate {
-        public func sessionDidBecomeInactive(_: WCSession) {}
+        #if os(iOS)
+            @available(iOS 9.3, *)
+            public func sessionDidBecomeInactive(_: WCSession) {}
 
-        public func sessionDidDeactivate(_: WCSession) {}
-
+            @available(iOS 9.3, *)
+            public func sessionDidDeactivate(_: WCSession) {}
+        #endif
+        @available(iOS 9.3, watchOS 2.2, *)
         public func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {}
 
         public func session(_: WCSession, didReceiveMessage message: [String: Any]) {
