@@ -40,8 +40,8 @@ import Foundation
 /// should use it's own set of identifiers to associate with it's messages back to the application.
 /// Passing messages to the same identifier from two locations should be done only at your own risk.
 
-public class Wormhole: NSObject {
-    private var listenerBlocks = [String: (Message?) -> Void]()
+public class Wormhole: NSObject, TransitingDelegate {
+    private var listenerBlocks = [String: (Any?) -> Void]()
     /// The wormhole messenger is an object that conforms to the `Wormhole.Transiting` protocol. By default
     /// this object will be set to a default implementation of this protocol which handles archiving and
     /// unarchiving the message to the shared app group in a file named after the identifier of the
@@ -99,7 +99,7 @@ public class Wormhole: NSObject {
     /// - Parameters:
     ///   - message: The message object to be passed. This object may be nil. In this case only a notification is posted.
     ///   - identifier: The identifier for the message
-    public func passMessage(_ message: Message?, with identifier: String) {
+    public func passMessage<T: Codable>(_ message: T?, with identifier: String) {
         if messenger?.writeMessage(message, for: identifier) == true {
             sendNotificationForMessage(with: identifier)
         }
@@ -107,7 +107,7 @@ public class Wormhole: NSObject {
 
     /// This method returns the value of a message with a specific identifier as an object.
     /// - Parameter identifier: The identifier for the message
-    public func message(with identifier: String) -> Message? {
+    public func message(with identifier: String) -> Any? {
         return messenger?.message(for: identifier)
     }
 
@@ -130,8 +130,8 @@ public class Wormhole: NSObject {
     ///
     /// - Parameters:
     ///   - identifier: The identifier for the message
-    ///   - listener: A listener block called with the messageObject parameter when a notification is observed.
-    public func listenForMessage(with identifier: String, listener: @escaping (Message?) -> Void) {
+    ///   - listener: A listener block called with the message parameter when a notification is observed.
+    public func listenForMessage(with identifier: String, listener: @escaping (Any?) -> Void) {
         listenerBlocks[identifier] = listener
         registerNotification(with: identifier)
     }
@@ -189,7 +189,7 @@ public class Wormhole: NSObject {
         )
     }
 
-    internal func notifyListener(with message: Message?, for identifier: String) {
+    internal func notifyListener(with message: Any?, for identifier: String) {
         guard let listenerBlock = listenerBlocks[identifier] else {
             return
         }
@@ -199,5 +199,3 @@ public class Wormhole: NSObject {
         }
     }
 }
-
-public struct Message: Codable {}

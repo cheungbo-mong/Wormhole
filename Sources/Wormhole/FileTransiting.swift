@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AnyCodable
 
 /// This class is a default implementation of the `Wormhole.Transiting` protocol that implements
 /// message transiting by archiving and unarchiving messages that are written and read to files on
@@ -69,7 +70,7 @@ public class FileTransiting: Transiting {
         }
     }
 
-    public func writeMessage(_ message: Message?, for identifier: String) -> Bool {
+    public func writeMessage<T: Codable>(_ message: T?, for identifier: String) -> Bool {
         guard let message = message else {
             // just notification
             return true
@@ -77,7 +78,7 @@ public class FileTransiting: Transiting {
 
         guard
             let fileDir = fileDirectory(for: identifier),
-            let data = try? JSONEncoder().encode(message)
+            let data = try? JSONEncoder().encode(AnyCodable(message))
 
         else {
             return false
@@ -91,7 +92,7 @@ public class FileTransiting: Transiting {
         }
     }
 
-    public func message(for identifier: String) -> Message? {
+    public func message(for identifier: String) -> Any? {
         guard
             let fileDir = fileDirectory(for: identifier),
             let data = try? Data(contentsOf: fileDir)
@@ -99,7 +100,8 @@ public class FileTransiting: Transiting {
             return nil
         }
 
-        return try? JSONDecoder().decode(Message.self, from: data)
+        let msgContainer = try? JSONDecoder().decode(AnyCodable.self, from: data)
+        return msgContainer?.value
     }
 
     public func deleteContent(for identifier: String) {

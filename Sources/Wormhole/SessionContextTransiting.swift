@@ -8,6 +8,7 @@
 #if !os(macOS)
     import Foundation
     import WatchConnectivity
+    import AnyCodable
 
     /// This class provides support for the WatchConnectivity framework's Application Context message
     /// reading and writing ability. This class will pass it's messages directly via the
@@ -36,10 +37,10 @@
             }
         }
 
-        override func writeMessage(_ message: Message?, for identifier: String) -> Bool {
+        override func writeMessage<T: Codable>(_ message: T?, for identifier: String) -> Bool {
             guard
                 WCSession.isSupported(),
-                let data = try? JSONEncoder().encode(message)
+                let data = try? JSONEncoder().encode(AnyCodable(message))
             else {
                 return false
             }
@@ -62,7 +63,7 @@
             return false
         }
 
-        override func message(for identifier: String) -> Message? {
+        override func message(for identifier: String) -> Any? {
             guard let data: Data = {
                 if
                     let recievedData = wcSession.receivedApplicationContext[identifier] as? Data
@@ -74,8 +75,8 @@
             }() else {
                 return nil
             }
-
-            return try? JSONDecoder().decode(Message.self, from: data)
+            let msgContainer = try? JSONDecoder().decode(AnyCodable.self, from: data)
+            return msgContainer?.value
         }
 
         override func deleteContent(for identifier: String) {

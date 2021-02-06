@@ -8,6 +8,7 @@
 #if !os(macOS)
 import Foundation
 import WatchConnectivity
+import AnyCodable
 
 /// This class provides support for the WatchConnectivity framework's real time message passing ability.
 ///
@@ -36,10 +37,10 @@ class SessionMessageTransiting: FileTransiting {
         }
     }
 
-    override func writeMessage(_ message: Message?, for identifier: String) -> Bool {
+    override func writeMessage<T: Codable>(_ message: T?, for identifier: String) -> Bool {
         guard
             wcSession.isReachable,
-            let data = try? JSONEncoder().encode(message)
+            let data = try? JSONEncoder().encode(AnyCodable(message))
         else {
             return false
         }
@@ -48,7 +49,7 @@ class SessionMessageTransiting: FileTransiting {
         return false
     }
 
-    override func message(for identifier: String) -> Message? {
+    override func message(for identifier: String) -> Any? {
         nil
     }
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AnyCodable
 
 /// This class inherits from the default implementation of the MMWormholeTransiting protocol and implements message transiting in a similar way but using NSFileCoordinator for its file reading and writing.
 public class CoordinatedFileTransiting: FileTransiting {
@@ -16,14 +17,14 @@ public class CoordinatedFileTransiting: FileTransiting {
     /// to the additional writing options you want to use.
     public var additionalDataWritingOptions = Data.WritingOptions.atomic
 
-    public override func writeMessage(_ message: Message?, for identifier: String) -> Bool {
+    public override func writeMessage<T: Codable>(_ message: T?, for identifier: String) -> Bool {
         guard let message = message else {
             // just notification
             return true
         }
 
         guard
-            let data = try? JSONEncoder().encode(message),
+            let data = try? JSONEncoder().encode(AnyCodable(message)),
             let fileDir = fileDirectory(for: identifier)
         else {
             return false
@@ -47,7 +48,7 @@ public class CoordinatedFileTransiting: FileTransiting {
         return (error == nil) && succeeded
     }
 
-    public override func message(for identifier: String) -> Message? {
+    public override func message(for identifier: String) -> Any? {
         guard let fileURL = fileDirectory(for: identifier) else {
             return nil
         }
@@ -63,6 +64,7 @@ public class CoordinatedFileTransiting: FileTransiting {
             return nil
         }
 
-        return try? JSONDecoder().decode(Message.self, from: messageData)
+        let msgContainer = try? JSONDecoder().decode(AnyCodable.self, from: messageData)
+        return msgContainer?.value
     }
 }

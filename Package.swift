@@ -16,11 +16,15 @@ let package = Package(
             targets: ["Wormhole"]),
     ],
     dependencies: [
+        .package(
+                url: "https://github.com/Flight-School/AnyCodable",
+                from: "0.4.0"
+            )
     ],
     targets: [
         .target(
             name: "Wormhole",
-            dependencies: [],
+            dependencies: ["AnyCodable"],
             path: "Sources")
     ]
 )

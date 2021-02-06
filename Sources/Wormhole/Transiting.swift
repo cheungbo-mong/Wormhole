@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AnyCodable
 
 /// This protocol defines the public interface for classes wishing to support the transiting of data
 /// between two sides of the wormhole. Transiting is defined as passage between two points, and in this
@@ -17,11 +18,11 @@ public protocol Transiting: class {
     ///   - message: The message object to be passed. This object may be nil. In this the method should return true.
     ///   - identifier: The identifier for the message
     /// - Returns: true indicating that a notification should be sent and false otherwise
-    func writeMessage(_ message: Message?, for identifier: String) -> Bool
+    func writeMessage<T: Codable>(_ message: T?, for identifier: String) -> Bool
 
     /// This method is responsible for reading and returning the contents of a given message. It should understand the structure of messages saved by the implementation of the above `writeMessage(_:for)` method and be able to read those messages and return their contents.
     /// - Parameter identifier: The identifier for the message
-    func message(for identifier: String) -> Message?
+    func message(for identifier: String) -> Any?
 
     /// This method should clear the persisted contents of a specific message with a given identifier.
     /// - Parameter identifier: The identifier for the message
@@ -32,5 +33,5 @@ public protocol Transiting: class {
 }
 
 protocol TransitingDelegate: class {
-    func notifyListenerForMessage(_ message: Message, with identifier: String)
+    func notifyListener(with message: Any?, for identifier: String)
 }

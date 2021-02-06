@@ -8,6 +8,7 @@
 #if !os(macOS)
     import Foundation
     import WatchConnectivity
+import AnyCodable
 
     public class Session: Wormhole {
         /// This is a specific instance of `Wormhole.Session` that should be used for listening. You
@@ -33,13 +34,13 @@
 
         // MARK: Public subclass methods
 
-        override public func passMessage(_: Message?, with _: String) {
+        override public func passMessage<T: Codable>(_: T?, with _: String) {
             fatalError(
                 "Message passing is not supported in Wormhole.Session. Please use Wormhole with an Wormhole.SessionTransiting type to pass messages using WatchConnectivity."
             )
         }
 
-        override public func message(with _: String) -> Message? {
+        override public func message(with _: String) -> Any? {
             fatalError(
                 "Message passing is not supported in Wormhole.Session. Please use Wormhole with an Wormhole.SessionTransiting type to pass messages using WatchConnectivity."
             )
@@ -76,27 +77,23 @@
 
         public func session(_: WCSession, didReceiveMessage message: [String: Any]) {
             message.forEach { identifier, value in
-                if
-                    let data = value as? Data,
-                    let msg = try? JSONDecoder().decode(Message.self, from: data)
-                {
-                    notifyListener(with: msg, for: identifier)
-                } else {
+                guard let data = value as? Data else {
                     notifyListener(with: nil, for: identifier)
+                    return
                 }
+                let msgContainer = try? JSONDecoder().decode(AnyCodable.self, from: data)
+                notifyListener(with: msgContainer?.value, for: identifier)
             }
         }
 
         public func session(_: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
             applicationContext.forEach { identifier, value in
-                if
-                    let data = value as? Data,
-                    let msg = try? JSONDecoder().decode(Message.self, from: data)
-                {
-                    notifyListener(with: msg, for: identifier)
-                } else {
+                guard let data = value as? Data else {
                     notifyListener(with: nil, for: identifier)
+                    return
                 }
+                let msgContainer = try? JSONDecoder().decode(AnyCodable.self, from: data)
+                notifyListener(with: msgContainer?.value, for: identifier)
             }
         }
 
@@ -107,24 +104,22 @@
                 return
             }
             
-            if
-                let data = try? Data(contentsOf: file.fileURL),
-                let msg = try? JSONDecoder().decode(Message.self, from: data)
-            {
-                notifyListener(with: msg, for: identifier)
-                // update file
-                guard
-                    let fileMessenger = messenger as? FileTransiting,
-                    let directory = fileMessenger.fileDirectory(for: identifier)
-                else {
-                    return
-                }
-                
-                try? data.write(to: directory)
-                
-            } else {
+            guard let data = try? Data(contentsOf: file.fileURL) else {
                 notifyListener(with: nil, for: identifier)
+                return
             }
+            let msgContainer = try? JSONDecoder().decode(AnyCodable.self, from: data)
+            notifyListener(with: msgContainer?.value, for: identifier)
+            
+            // update file
+            guard
+                let fileMessenger = messenger as? FileTransiting,
+                let directory = fileMessenger.fileDirectory(for: identifier)
+            else {
+                return
+            }
+            
+            try? data.write(to: directory)
         }
     }
 #endif
