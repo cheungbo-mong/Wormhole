@@ -1,0 +1,26 @@
+PODS:
+  - AnyCodable-FlightSchool (0.4.0)
+  - Wormhole (0.1.0):
+    - AnyCodable-FlightSchool (~> 0.4.0)
+    - Wormhole/Core (= 0.1.0)
+  - Wormhole/Core (0.1.0):
+    - AnyCodable-FlightSchool (~> 0.4.0)
+
+DEPENDENCIES:
+  - Wormhole (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - AnyCodable-FlightSchool
+
+EXTERNAL SOURCES:
+  Wormhole:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AnyCodable-FlightSchool: 9bf42632b5256c78710e2f4fb18ce78e89180883
+  Wormhole: 6ef991617f7a88f1b43b8db681158779a98f9d12
+
+PODFILE CHECKSUM: fc95d0a661823b3cb1352d2571b972b40c1d43a2
+
+COCOAPODS: 1.10.1

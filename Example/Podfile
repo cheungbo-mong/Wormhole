@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'Wormhole_Example' do
+  pod 'Wormhole', :path => '../'
+
+  target 'Wormhole_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
