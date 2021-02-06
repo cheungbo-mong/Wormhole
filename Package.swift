@@ -8,23 +8,25 @@ let package = Package(
     platforms: [
         .iOS(.v10),
         .macOS(.v10_10),
-        .watchOS(.v4)
+        .watchOS(.v4),
     ],
     products: [
         .library(
             name: "Wormhole",
-            targets: ["Wormhole"]),
+            targets: ["Wormhole"]
+        ),
     ],
     dependencies: [
         .package(
-                url: "https://github.com/Flight-School/AnyCodable",
-                from: "0.4.0"
-            )
+            url: "https://github.com/Flight-School/AnyCodable",
+            from: "0.4.0"
+        ),
     ],
     targets: [
         .target(
             name: "Wormhole",
             dependencies: ["AnyCodable"],
-            path: "Sources")
+            path: "Sources"
+        ),
     ]
 )

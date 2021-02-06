@@ -1,18 +1,33 @@
+// Transiting.swift
+//  Copyright (c) 2014 Mutual Mobile (http://www.mutualmobile.com/)
+//  Created by Vance Will (vancewilll@icloud.com).
 //
-//  Transiting.swift
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
 //
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
-//  Created by Ethan Mengoreo on 2021/2/3.
-//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 
-import Foundation
 import AnyCodable
+import Foundation
 
 /// This protocol defines the public interface for classes wishing to support the transiting of data
 /// between two sides of the wormhole. Transiting is defined as passage between two points, and in this
 /// case it involves both the reading and writing of messages as well as the deletion of message
 /// contents.
-public protocol Transiting: class {
+public protocol Transiting: AnyObject {
     /// This method is responsible for writing a given message object in a persisted format for a given identifier. The method should return true if the message was successfully saved. The message object may be nil, in which case true should also be returned. Returning true from this method results in a notification being fired which will trigger the corresponding listener block for the given identifier.
     /// - Parameters:
     ///   - message: The message object to be passed. This object may be nil. In this the method should return true.
@@ -32,6 +47,6 @@ public protocol Transiting: class {
     func deleteContentForAllMessages()
 }
 
-protocol TransitingDelegate: class {
+protocol TransitingDelegate: AnyObject {
     func notifyListener(with message: Any?, for identifier: String)
 }

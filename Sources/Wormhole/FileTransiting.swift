@@ -1,12 +1,27 @@
+// FileTransiting.swift
+//  Copyright (c) 2014 Mutual Mobile (http://www.mutualmobile.com/)
+//  Created by Vance Will (vancewilll@icloud.com).
 //
-//  FileTransiting.swift
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
 //
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
-//  Created by Ethan Mengoreo on 2021/2/3.
-//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 
-import Foundation
 import AnyCodable
+import Foundation
 
 /// This class is a default implementation of the `Wormhole.Transiting` protocol that implements
 /// message transiting by archiving and unarchiving messages that are written and read to files on
@@ -121,8 +136,7 @@ public class FileTransiting: Transiting {
         try? fileManager.contentsOfDirectory(atPath: directory.path)
             .forEach(fileManager.removeItem)
     }
-    
-    
+
     /// This method returns the full file directory for the file associated with the given message identifier.
     /// It includes the optional container passed in the designated initializer if there is one.
     /// Subclasses can use this method to provide custom implementations.
