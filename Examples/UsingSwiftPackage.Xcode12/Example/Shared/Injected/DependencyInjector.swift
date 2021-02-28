@@ -37,4 +37,3 @@ extension View {
         return environment(\.injected, container)
     }
 }
-

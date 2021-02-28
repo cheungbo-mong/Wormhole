@@ -37,4 +37,3 @@ class ActualPhoneSessionHandler: NSObject, PhoneSessionHandler {
         container.interactors.mainInteractor.startListening()
     }
 }
-

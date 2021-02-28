@@ -5,23 +5,23 @@
 //  Created by Vance Will on 2/28/21.
 //
 
-import WidgetKit
-import SwiftUI
-import Wormhole
 import Combine
 import CoreServices
+import SwiftUI
+import WidgetKit
+import Wormhole
 
 struct Provider: TimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
+    func placeholder(in _: Context) -> SimpleEntry {
         SimpleEntry(date: Date())
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+    func getSnapshot(in _: Context, completion: @escaping (SimpleEntry) -> Void) {
         let entry = SimpleEntry(date: Date())
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    func getTimeline(in _: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         let entries = [SimpleEntry(date: Date())]
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
@@ -41,7 +41,7 @@ struct SimpleEntry: TimelineEntry {
             return ""
         }
     }
-    
+
     var watchButton: String {
         if
             let box = wormhole.message(with: .watchPhoneWidgetMsgID),
@@ -53,28 +53,28 @@ struct SimpleEntry: TimelineEntry {
             return ""
         }
     }
-    
+
     private let wormhole = Wormhole(
         appGroup: .wormholeAppGroup,
         container: .wormholeContainer
     )
-    
+
     init(date: Date) {
         self.date = date
     }
-    
+
     func onAppear() {
         wormhole.passMessage(["message": "Widget did appear"], with: .widgetPhoneMsgID)
     }
 }
 
-struct Example_iOS_WidgetEntryView : View {
+struct Example_iOS_WidgetEntryView: View {
     let entry: SimpleEntry
-    
+
     var body: some View {
         VStack {
             Text("phoneSelection: \(entry.phoneSelection)")
-            
+
             Text("watchButton: \(entry.watchButton)")
         }.onAppear(perform: entry.onAppear)
     }

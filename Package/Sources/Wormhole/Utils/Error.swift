@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+// Error.swift
+// Copyright (c) 2014 Mutual Mobile (http://www.mutualmobile.com/)
 //
-//  Created by Ethan Mengoreo on 2/28/21.
+// Created by Vance Will (vancewilll@icloud.com).
 //
 
 import Foundation

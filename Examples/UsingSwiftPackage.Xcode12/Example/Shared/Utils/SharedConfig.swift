@@ -9,7 +9,7 @@ import Foundation
 
 extension String {
     static let wormholeAppGroup = "group.your.own.appgroup"
-    
+
     static let wormholeContainer = "wormhole"
     /// Message id from iPhone to iWatch
     ///
