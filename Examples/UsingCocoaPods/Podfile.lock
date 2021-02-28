@@ -1,0 +1,18 @@
+PODS:
+  - Wormhole (0.1.0):
+    - Wormhole/Core (= 0.1.0)
+  - Wormhole/Core (0.1.0)
+
+DEPENDENCIES:
+  - Wormhole (from `../../Package/`)
+
+EXTERNAL SOURCES:
+  Wormhole:
+    :path: "../../Package/"
+
+SPEC CHECKSUMS:
+  Wormhole: 5fe5661ba284843d84ac185ee86211e98dc16593
+
+PODFILE CHECKSUM: 59654dcc9e34ab2c4332e786f671a76cea4b9c96
+
+COCOAPODS: 1.10.1

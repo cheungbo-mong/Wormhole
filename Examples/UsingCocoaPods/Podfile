@@ -1,0 +1,16 @@
+use_frameworks!
+
+target 'Example.iOS' do
+  platform :ios, '14.0'
+  pod 'Wormhole', :path => '../../Package/'
+end
+
+target 'Example.watchOS Extension' do
+  platform :watchos, '7.0'
+  pod 'Wormhole', :path => '../../Package/'
+end
+
+target 'Example.iOS.WidgetExtension' do
+  platform :ios, '14.0'
+  pod 'Wormhole', :path => '../../Package/'
+end
