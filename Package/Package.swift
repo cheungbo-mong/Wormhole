@@ -20,7 +20,6 @@ let package = Package(
     targets: [
         .target(
             name: "Wormhole",
-            dependencies: ["AnyCodable"],
             path: "Sources"
         ),
     ]
