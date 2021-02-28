@@ -18,25 +18,15 @@ Pod::Spec.new do |s|
 
   s.default_subspec = 'Core'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
   s.osx.deployment_target = '10.10'
-  s.watchos.deployment_target = '2.0'
+  s.watchos.deployment_target = '3.0'
   
   s.ios.frameworks = 'CoreServices', 'Foundation', 'WatchConnectivity'
   s.osx.frameworks = 'CoreServices', 'Foundation'
   s.watchos.frameworks = 'CoreServices', 'Foundation', 'WatchConnectivity'
   
-  s.dependency 'AnyCodable-FlightSchool', '~> 0.4.0'
-  
   s.subspec 'Core' do |core|
-      core.ios.source_files = 'Sources/Wormhole/*.swift'
-      core.watchos.source_files = 'Sources/Wormhole/*.swift'
-      core.osx.source_files =
-          'Sources/Wormhole/Wormhole.swift',
-          'Sources/Wormhole/Helpers.swift',
-          'Sources/Wormhole/TransitingType.swift',
-          'Sources/Wormhole/Transiting.swift',
-          'Sources/Wormhole/FileTransiting.swift',
-          'Sources/Wormhole/CoordinatedFileTransiting.swift'
+      core.source_files = 'Sources/Wormhole/**/*.swift'
     end
 end

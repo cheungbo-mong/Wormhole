@@ -6,9 +6,9 @@ import PackageDescription
 let package = Package(
     name: "Wormhole",
     platforms: [
-        .iOS(.v9),
+        .iOS(.v10),
         .macOS(.v10_10),
-        .watchOS(.v2),
+        .watchOS(.v3),
     ],
     products: [
         .library(
