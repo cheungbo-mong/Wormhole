@@ -6,7 +6,9 @@
 //
 
 import Foundation
-import WatchConnectivity
+#if !os(macOS)
+    import WatchConnectivity
+#endif
 
 /// This class provides support for the WatchConnectivity framework's file transfer ability. This class
 /// will behave very similar to the `Wormhole.FileTransiting` implementation, meaning it will archive

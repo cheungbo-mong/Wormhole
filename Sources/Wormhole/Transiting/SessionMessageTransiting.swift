@@ -6,7 +6,9 @@
 //
 
 import Foundation
-import WatchConnectivity
+#if !os(macOS)
+    import WatchConnectivity
+#endif
 
 /// This class provides support for the WatchConnectivity framework's real time message passing ability.
 ///

@@ -15,6 +15,7 @@ Pod::Spec.new do |s|
   s.author           = { 'Vance Will' => 'vancewilll@icloud.com' }
   s.source           = { :git => 'https://github.com/vencewill/Wormhole.git', :tag => s.version.to_s }
   s.requires_arc = true
+  s.swift_version = '5.3'
 
   s.default_subspec = 'Core'
 

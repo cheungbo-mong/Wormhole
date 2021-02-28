@@ -7,7 +7,9 @@
 
 import CoreServices
 import Foundation
-import WatchConnectivity
+#if !os(macOS)
+    import WatchConnectivity
+#endif
 
 /// This class creates a wormhole between a containing iOS application and an extension. The wormhole
 /// is meant to be used to pass data or commands back and forth between the two locations. The effect
