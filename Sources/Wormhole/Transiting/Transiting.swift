@@ -1,26 +1,10 @@
+//
 // Transiting.swift
-//  Copyright (c) 2014 Mutual Mobile (http://www.mutualmobile.com/)
-//  Created by Vance Will (vancewilll@icloud.com).
+// Copyright (c) 2014 Mutual Mobile (http://www.mutualmobile.com/)
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
+// Created by Vance Will (vancewilll@icloud.com).
 //
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
 
-import AnyCodable
 import Foundation
 
 /// This protocol defines the public interface for classes wishing to support the transiting of data
@@ -33,20 +17,47 @@ public protocol Transiting: AnyObject {
     ///   - message: The message object to be passed. This object may be nil. In this the method should return true.
     ///   - identifier: The identifier for the message
     /// - Returns: true indicating that a notification should be sent and false otherwise
-    func writeMessage<T: Codable>(_ message: T?, for identifier: String) -> Bool
+    func writeMessage<T: Codable>(_ message: T?, for identifier: String, errorHandler: ((Error) -> Void)?) -> Bool
 
     /// This method is responsible for reading and returning the contents of a given message. It should understand the structure of messages saved by the implementation of the above `writeMessage(_:for)` method and be able to read those messages and return their contents.
     /// - Parameter identifier: The identifier for the message
-    func message(for identifier: String) -> Any?
+    func message(for identifier: String, errorHandler: ((Error) -> Void)?) -> CodableBox?
 
     /// This method should clear the persisted contents of a specific message with a given identifier.
     /// - Parameter identifier: The identifier for the message
-    func deleteContent(for identifier: String)
+    func deleteContent(for identifier: String, errorHandler: ((Error) -> Void)?)
 
     /// This method should clear the contents of all messages passed to the wormhole.
-    func deleteContentForAllMessages()
+    func deleteContentForAllMessages(errorHandler: ((Error) -> Void)?)
 }
 
 protocol TransitingDelegate: AnyObject {
-    func notifyListener(with message: Any?, for identifier: String)
+    func notifyListener(with message: CodableBox?, for identifier: String)
+}
+
+/// Wormhols transiting type
+///
+/// - Important: Test failed on `sessionFile`, please be noted
+public enum TransitingType {
+    case file
+    case coordinatedFile
+
+    /// Communicating between iOS and watchOS by updating application context
+    @available(iOS 10.0, watchOS 3.0, *)
+    @available(macOS, unavailable)
+    @available(tvOS, unavailable)
+    case sessionContext
+
+    /// Communicating between iOS and watchOS by sending messages
+    @available(iOS 10.0, watchOS 3.0, *)
+    @available(macOS, unavailable)
+    @available(tvOS, unavailable)
+    case sessionMessage
+
+    /// Communicating between iOS and watchOS by transferring files
+    @available(iOS, unavailable, message: "Test failed for now, please use sessionContext or sessionMessage")
+    @available(watchOS, unavailable, message: "Test failed for now, please use sessionContext or sessionMessage")
+    @available(macOS, unavailable)
+    @available(tvOS, unavailable)
+    case sessionFile
 }
