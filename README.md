@@ -18,11 +18,8 @@ If you prefer using Cocoapods, there is also a corresponding example lying in `.
 
 ### CocoaPods
 
-Wormhole is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
 ```ruby
-pod 'Wormhole'
+pod 'Wormhole', :git => 'https://github.com/vencewill/Wormhole.git'
 ```
 
 ### Swift Package Manager
