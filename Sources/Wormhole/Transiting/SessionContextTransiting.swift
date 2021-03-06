@@ -6,9 +6,7 @@
 //
 
 import Foundation
-#if !os(macOS)
-    import WatchConnectivity
-#endif
+import WatchConnectivity
 
 /// This class provides support for the WatchConnectivity framework's Application Context message
 /// reading and writing ability. This class will pass it's messages directly via the

@@ -29,5 +29,11 @@ Pod::Spec.new do |s|
   
   s.subspec 'Core' do |core|
       core.source_files = 'Sources/Wormhole/**/*.swift'
+      core.osx.exclude_files = [
+        'Sources/Wormhole/Transiting/SessionContextTransiting.swift',
+        'Sources/Wormhole/Transiting/SessionFileTransiting.swift',
+        'Sources/Wormhole/Transiting/SessionMessageTransiting.swift',
+        'Sources/Wormhole/Wormhole+WCSessionDelegate.swift',
+      ]
     end
 end

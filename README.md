@@ -1,23 +1,34 @@
 # Wormhole
 
-[![CI Status](https://img.shields.io/travis/Vance Will/Wormhole.svg?style=flat)](https://travis-ci.org/Vance Will/Wormhole)
-[![Version](https://img.shields.io/cocoapods/v/Wormhole.svg?style=flat)](https://cocoapods.org/pods/Wormhole)
-[![License](https://img.shields.io/cocoapods/l/Wormhole.svg?style=flat)](https://cocoapods.org/pods/Wormhole)
-[![Platform](https://img.shields.io/cocoapods/p/Wormhole.svg?style=flat)](https://cocoapods.org/pods/Wormhole)
+Original author: [Mutual Mobile](https://github.com/mutualmobile/MMWormhole)
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+Example in `./Examples/UsingSwiftPackage.Xcode12` is **highly RECOMMENDED**, if you're using `Xcode 12`. Not need to pod install. Just open the `Example.xcworkspace`, then you're good to go.
+
+If you prefer using Cocoapods, there is also a corresponding example lying in `./Examples/UsingCocoaPods`.
+
+> Swift package for mac targets are not ready with 'neat' solution except duplicating codes or wrapping codes inside `#if !os(macOS) ... #endif` macro which isn't as elegant as the way Cocoapods handles cross-platform targets.
+>
+> So if you're planning using `Wormhole` with macOS targets, please go with Cocoapods anyway.
 
 ## Requirements
 
 ## Installation
+
+### CocoaPods
 
 Wormhole is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'Wormhole'
+```
+
+### Swift Package Manager
+
+```swift
+.package(url: "https://github.com/vencewill/Wormhole.git", from: "0.1.0"),
 ```
 
 ## Author

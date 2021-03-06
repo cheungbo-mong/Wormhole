@@ -7,9 +7,6 @@
 
 import CoreServices
 import Foundation
-#if !os(macOS)
-    import WatchConnectivity
-#endif
 
 /// This class creates a wormhole between a containing iOS application and an extension. The wormhole
 /// is meant to be used to pass data or commands back and forth between the two locations. The effect
@@ -52,8 +49,8 @@ import Foundation
 @available(iOS 10.0, watchOS 3.0, macOS 10.10, *)
 @available(tvOS, unavailable)
 public class Wormhole: NSObject, TransitingDelegate {
-    private var listenerBlocks = [String: (CodableBox?) -> Void]()
-    private var errorHandlers = [String: (Error) -> Void]()
+    var listenerBlocks = [String: (CodableBox?) -> Void]()
+    var errorHandlers = [String: (Error) -> Void]()
     /// The wormhole messenger is an object that conforms to the `Wormhole.Transiting` protocol. By default
     /// this object will be set to a default implementation of this protocol which handles archiving and
     /// unarchiving the message to the shared app group in a file named after the identifier of the
@@ -80,18 +77,20 @@ public class Wormhole: NSObject, TransitingDelegate {
             messenger = FileTransiting(appGroup: appGroup, container: container)
         case .coordinatedFile:
             messenger = CoordinatedFileTransiting(appGroup: appGroup, container: container)
-        case .sessionContext:
-            let transiting = SessionContextTransiting()
-            transiting.delegate = self
-            messenger = transiting
-        case .sessionMessage:
-            let transiting = SessionMessageTransiting()
-            transiting.delegate = self
-            messenger = transiting
-        case .sessionFile:
-            let transiting = SessionFileTransiting(appGroup: appGroup, container: container)
-            transiting.delegate = self
-            messenger = transiting
+        #if !os(macOS)
+            case .sessionContext:
+                let transiting = SessionContextTransiting()
+                transiting.delegate = self
+                messenger = transiting
+            case .sessionMessage:
+                let transiting = SessionMessageTransiting()
+                transiting.delegate = self
+                messenger = transiting
+            case .sessionFile:
+                let transiting = SessionFileTransiting(appGroup: appGroup, container: container)
+                transiting.delegate = self
+                messenger = transiting
+        #endif
         }
         NotificationCenter.default.addObserver(self, selector: #selector(didRecieveNotification(_:)), name: .wormhole, object: self)
     }
@@ -212,70 +211,6 @@ public class Wormhole: NSObject, TransitingDelegate {
 
         DispatchQueue.main.async {
             listenerBlock(message)
-        }
-    }
-}
-
-// MARK: WCSessionDelegate
-
-@available(iOS 10.0, watchOS 3.0, *)
-@available(macOS, unavailable)
-@available(tvOS, unavailable)
-extension Wormhole: WCSessionDelegate {
-    #if os(iOS)
-        public func sessionDidBecomeInactive(_: WCSession) {}
-        public func sessionDidDeactivate(_: WCSession) {}
-    #endif
-
-    public func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {}
-
-    public func sessionReachabilityDidChange(_: WCSession) {}
-
-    public func session(_: WCSession, didReceiveMessage message: [String: Any]) {
-        message.forEach { identifier, value in
-            guard let data = value as? Data else {
-                notifyListener(with: nil, for: identifier)
-                return
-            }
-            let msgContainer = try? JSONDecoder().decode(CodableBox.self, from: data)
-            notifyListener(with: msgContainer, for: identifier)
-        }
-    }
-
-    public func session(_: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
-        applicationContext.forEach { identifier, value in
-            guard let data = value as? Data else {
-                notifyListener(with: nil, for: identifier)
-                return
-            }
-            let msgContainer = try? JSONDecoder().decode(CodableBox.self, from: data)
-            notifyListener(with: msgContainer, for: identifier)
-        }
-    }
-
-    public func session(_: WCSession, didReceive file: WCSessionFile) {
-        guard
-            let identifier = file.metadata?["identifier"] as? String
-        else {
-            return
-        }
-
-        do {
-            let data = try Data(contentsOf: file.fileURL)
-            let msgContainer = try JSONDecoder().decode(CodableBox.self, from: data)
-            notifyListener(with: msgContainer, for: identifier)
-
-            // update file wi
-            guard
-                let fileMessenger = messenger as? FileTransiting
-            else {
-                return
-            }
-
-            let directory = try fileMessenger.fileDirectory(for: identifier)
-            try data.write(to: directory)
-        } catch {
-            errorHandlers[identifier]?(error)
         }
     }
 }
